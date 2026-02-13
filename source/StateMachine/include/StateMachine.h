@@ -26,7 +26,7 @@
  * @brief Enum for the different system states.
  * 
  */
-typedef enum __System_States
+typedef enum System_States
 {
     SYSTEM_STATE_1_E,
     SYSTEM_STATE_2_E,
@@ -43,6 +43,7 @@ typedef enum __System_States
 /*******************************************************************************
  * Typedefs
  ******************************************************************************/
+typedef struct System_State_Control System_State_Control_t;   //Forward declaration of ctrl struct.
 typedef void ( *SystemState ) ( System_State_Control_t * );     //Typedef for pointer to state function.
 
 
@@ -53,7 +54,7 @@ typedef void ( *SystemState ) ( System_State_Control_t * );     //Typedef for po
  * @brief Control struct for state machine.
  * 
  */
-typedef struct __System_State_Control
+typedef struct System_State_Control
 {
     SystemState StateHandler[NUM_STATES];   //Array of pointers to state functions.
     uint8_t CurrentState;                   //Current state index.
@@ -63,7 +64,7 @@ typedef struct __System_State_Control
 /*******************************************************************************
  * Public function prototypes.
  ******************************************************************************/
-void StateMachine_Init( System_State_Control_t *ctrl );
-void StateMachine_Run( System_State_Control_t *ctrl );
+bool StateMachine_Init( System_State_Control_t *ctrl );
+bool StateMachine_Run( System_State_Control_t *ctrl );
 
 #endif
