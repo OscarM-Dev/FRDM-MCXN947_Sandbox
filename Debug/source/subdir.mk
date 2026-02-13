@@ -4,15 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../source/gpio_input_interrupt.c \
+../source/main.c \
 ../source/semihost_hardfault.c 
 
 C_DEPS += \
-./source/gpio_input_interrupt.d \
+./source/main.d \
 ./source/semihost_hardfault.d 
 
 OBJS += \
-./source/gpio_input_interrupt.o \
+./source/main.o \
 ./source/semihost_hardfault.o 
 
 
@@ -28,7 +28,7 @@ source/%.o: ../source/%.c source/subdir.mk
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/gpio_input_interrupt.d ./source/gpio_input_interrupt.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o
+	-$(RM) ./source/main.d ./source/main.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o
 
 .PHONY: clean-source
 

@@ -92,6 +92,34 @@ void BOARD_InitPins(void)
     /* PORT0_10 (pin B12) is configured as PIO0_10 */
     PORT_SetPinConfig(PORT0, 10U, &port0_10_pinB12_config);
 
+    //Configuring button pins.
+    //SW2-PT0_23
+    const port_pin_config_t port0_23_pinB7_config = {/* Internal pull-up resistor is enabled */
+                                                     kPORT_PullUp,
+                                                     /* Low internal pull resistor value is selected. */
+                                                     kPORT_LowPullResistor,
+                                                     /* Fast slew rate is configured */
+                                                     kPORT_FastSlewRate,
+                                                     /* Passive input filter is disabled */
+                                                     kPORT_PassiveFilterDisable,
+                                                     /* Open drain output is disabled */
+                                                     kPORT_OpenDrainDisable,
+                                                     /* Low drive strength is configured */
+                                                     kPORT_LowDriveStrength,
+                                                     /* Pin is configured as PIO0_6 */
+                                                     kPORT_MuxAlt0,
+                                                     /* Digital input enabled */
+                                                     kPORT_InputBufferEnable,
+                                                     /* Digital input is not inverted */
+                                                     kPORT_InputNormal,
+                                                     /* Pin Control Register fields [15:0] are not locked */
+                                                     kPORT_UnlockRegister
+                                                     };
+
+    /* PORT0_23 (pin B7) is configured as PIO0_23 */
+    PORT_SetPinConfig( PORT0, 23U, &port0_23_pinB7_config );
+
+    //SW3-PT0_6
     const port_pin_config_t port0_6_pinC14_config = {/* Internal pull-up resistor is enabled */
                                                      kPORT_PullUp,
                                                      /* Low internal pull resistor value is selected. */
@@ -112,6 +140,7 @@ void BOARD_InitPins(void)
                                                      kPORT_InputNormal,
                                                      /* Pin Control Register fields [15:0] are not locked */
                                                      kPORT_UnlockRegister};
+
     /* PORT0_6 (pin C14) is configured as PIO0_6 */
     PORT_SetPinConfig(PORT0, 6U, &port0_6_pinC14_config);
 
