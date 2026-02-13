@@ -14,4 +14,56 @@
 #include "fsl_gpio.h"
 #include "board.h"
 
+/*******************************************************************************
+ * Macros
+ ******************************************************************************/
+#define NUM_STATES  9
+
+/*******************************************************************************
+ * Enums
+ ******************************************************************************/
+/**
+ * @brief Enum for the different system states.
+ * 
+ */
+typedef enum __System_States
+{
+    SYSTEM_STATE_1_E,
+    SYSTEM_STATE_2_E,
+    SYSTEM_STATE_3_E,
+    SYSTEM_STATE_4_E,
+    SYSTEM_STATE_5_E,
+    SYSTEM_STATE_6_E,
+    SYSTEM_STATE_7_E,
+    SYSTEM_STATE_8_E,
+    SYSTEM_STATE_9_E,
+    SYSTEM_STATE_UNDEFINED_E
+} System_States_t;
+
+/*******************************************************************************
+ * Typedefs
+ ******************************************************************************/
+typedef void ( *SystemState ) ( System_State_Control_t * );     //Typedef for pointer to state function.
+
+
+/*******************************************************************************
+ * Stucts and Unions.
+ ******************************************************************************/
+/**
+ * @brief Control struct for state machine.
+ * 
+ */
+typedef struct __System_State_Control
+{
+    SystemState StateHandler[NUM_STATES];   //Array of pointers to state functions.
+    uint8_t CurrentState;                   //Current state index.
+    bool StateNewCall;                      //Flag for new state calls.
+} System_State_Control_t;
+
+/*******************************************************************************
+ * Public function prototypes.
+ ******************************************************************************/
+void StateMachine_Init( System_State_Control_t *ctrl );
+void StateMachine_Run( System_State_Control_t *ctrl );
+
 #endif
