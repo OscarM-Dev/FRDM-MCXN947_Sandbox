@@ -17,6 +17,7 @@
 #include "app.h"
 #include "pin_mux.h"
 #include "board.h"
+#include "StateMachine.h"
 
 /*******************************************************************************
  * Macros

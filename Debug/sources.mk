@@ -18,6 +18,7 @@ board \
 component/uart \
 device \
 drivers \
+source/StateMachine/src \
 source \
 startup \
 utilities/debug_console_lite \
