@@ -69,6 +69,8 @@ void BOARD_InitPins(void)
     /* Enables the clock for PORT1: Enables clock */
     CLOCK_EnableClock(kCLOCK_Port1);
 
+    //Configuring RGB LED pins.
+    //Red LED pin
     const port_pin_config_t port0_10_pinB12_config = {/* Internal pull-up/down resistor is disabled */
                                                       kPORT_PullDisable,
                                                       /* Low internal pull resistor value is selected. */
@@ -89,8 +91,59 @@ void BOARD_InitPins(void)
                                                       kPORT_InputNormal,
                                                       /* Pin Control Register fields [15:0] are not locked */
                                                       kPORT_UnlockRegister};
+
     /* PORT0_10 (pin B12) is configured as PIO0_10 */
-    PORT_SetPinConfig(PORT0, 10U, &port0_10_pinB12_config);
+    PORT_SetPinConfig( PORT0, 10U, &port0_10_pinB12_config );
+
+    //Green LED pin
+    const port_pin_config_t port0_27_pinE10_config = {/* Internal pull-up/down resistor is disabled */
+                                                      kPORT_PullDisable,
+                                                      /* Low internal pull resistor value is selected. */
+                                                      kPORT_LowPullResistor,
+                                                      /* Fast slew rate is configured */
+                                                      kPORT_FastSlewRate,
+                                                      /* Passive input filter is disabled */
+                                                      kPORT_PassiveFilterDisable,
+                                                      /* Open drain output is disabled */
+                                                      kPORT_OpenDrainDisable,
+                                                      /* Low drive strength is configured */
+                                                      kPORT_LowDriveStrength,
+                                                      /* Pin is configured as PIO0_10 */
+                                                      kPORT_MuxAlt0,
+                                                      /* Digital input enabled */
+                                                      kPORT_InputBufferEnable,
+                                                      /* Digital input is not inverted */
+                                                      kPORT_InputNormal,
+                                                      /* Pin Control Register fields [15:0] are not locked */
+                                                      kPORT_UnlockRegister};
+                                                      
+    /* PORT0_27 (pin E10) is configured as PIO0_27 */
+    PORT_SetPinConfig( PORT0, 27U, &port0_27_pinE10_config );
+
+    //Blue LED pin
+    const port_pin_config_t port1_2_pinC4_config = {/* Internal pull-up/down resistor is disabled */
+                                                      kPORT_PullDisable,
+                                                      /* Low internal pull resistor value is selected. */
+                                                      kPORT_LowPullResistor,
+                                                      /* Fast slew rate is configured */
+                                                      kPORT_FastSlewRate,
+                                                      /* Passive input filter is disabled */
+                                                      kPORT_PassiveFilterDisable,
+                                                      /* Open drain output is disabled */
+                                                      kPORT_OpenDrainDisable,
+                                                      /* Low drive strength is configured */
+                                                      kPORT_LowDriveStrength,
+                                                      /* Pin is configured as PIO0_10 */
+                                                      kPORT_MuxAlt0,
+                                                      /* Digital input enabled */
+                                                      kPORT_InputBufferEnable,
+                                                      /* Digital input is not inverted */
+                                                      kPORT_InputNormal,
+                                                      /* Pin Control Register fields [15:0] are not locked */
+                                                      kPORT_UnlockRegister};
+                                                      
+    /* PORT1_2 (pin C4) is configured as PIO1_2 */
+    PORT_SetPinConfig( PORT1, 2U, &port1_2_pinC4_config );
 
     //Configuring button pins.
     //SW2-PT0_23

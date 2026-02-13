@@ -45,14 +45,8 @@ static volatile uint8_t SW3PressCount = 0;
 static void GPIO_Init( void )
 {
     //local data.
-    gpio_pin_config_t sw2Config = { kGPIO_DigitalInput, 0 }; //SW2 GPIO config.
-    gpio_pin_config_t sw3Config = { kGPIO_DigitalInput, 0 }; //SW3 GPIO config.
-
-    /*Define the init structure for the output LED pin
-    gpio_pin_config_t led_config = {
-        kGPIO_DigitalOutput,
-        0,
-    };*/
+    gpio_pin_config_t swConfig = { kGPIO_DigitalInput, 0 };     //SW GPIO config.
+    gpio_pin_config_t ledConfig = { kGPIO_DigitalOutput, 1 };   //LED GPIO config.
 
     //Interrupt configuration.
     GPIO_SetPinInterruptConfig( GPIO0, BOARD_SW2_GPIO_PIN, kGPIO_InterruptFallingEdge );
@@ -60,8 +54,11 @@ static void GPIO_Init( void )
     EnableIRQ( GPIO00_IRQn );
 
     //Initialize GPIOs configuration.
-    GPIO_PinInit( GPIO0, BOARD_SW2_GPIO_PIN, &sw2Config );
-    GPIO_PinInit( GPIO0, BOARD_SW3_GPIO_PIN, &sw3Config );
+    GPIO_PinInit( GPIO0, BOARD_SW2_GPIO_PIN, &swConfig );
+    GPIO_PinInit( GPIO0, BOARD_SW3_GPIO_PIN, &swConfig );
+    GPIO_PinInit( GPIO0, BOARD_LED_RED_GPIO_PIN, &ledConfig );
+    GPIO_PinInit( GPIO0, BOARD_LED_GREEN_GPIO_PIN, &ledConfig );
+    GPIO_PinInit( GPIO1, BOARD_LED_BLUE_GPIO_PIN, &ledConfig );
 }
 
 /*******************************************************************************
@@ -94,8 +91,6 @@ void BOARD_SW_IRQ_HANDLER( void )
     GPIO_GpioClearInterruptFlags( GPIO0, gpio0ClearInterruptMask );
 }
 
-
-
 /*!
  * @brief Main function
  */
@@ -103,24 +98,14 @@ int main(void)
 {
     BOARD_InitHardware();
     GPIO_Init();
-    
+
     /* Print a note to terminal. */
     //PRINTF("\r\n GPIO Driver example\r\n");
     //PRINTF("\r\n Press %s to turn on/off a LED \r\n", BOARD_SW_NAME);
 
-    /* Init output LED GPIO. */
-    //GPIO_PinInit(BOARD_LED_GPIO, BOARD_LED_GPIO_PIN, &led_config);
-
     while (1)
     {
-       /* if (g_ButtonPress)
-        {
-            PRINTF(" %s is pressed \r\n", BOARD_SW_NAME);
-            /* Toggle LED. 
-            GPIO_PortToggle(BOARD_LED_GPIO, 1U << BOARD_LED_GPIO_PIN);
-            /* Reset state of button. 
-            g_ButtonPress = false;
-        }
-        */
+    
     }
+
 }
