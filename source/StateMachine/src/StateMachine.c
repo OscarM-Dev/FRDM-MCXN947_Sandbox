@@ -10,6 +10,25 @@
 #include "StateMachine.h"
 
 /*******************************************************************************
+ * Enums
+ ******************************************************************************/
+/**
+ * @brief Enum for the different RGB colors
+ * 
+ */
+typedef enum RGB_Colors
+{
+    RGB_COLOR_OFF_E,
+    RGB_COLOR_RED_E,
+    RGB_COLOR_YELLOW_E,
+    RGB_COLOR_MAGENTA_E,
+    RGB_COLOR_GREEN_E,
+    RGB_COLOR_CYAN_E,
+    RGB_COLOR_BLUE_E,
+    RGB_COLOR_WHITE_E
+} RGB_Colors_t;
+
+/*******************************************************************************
  * Private function prototypes.
  ******************************************************************************/
 static void System_State1( System_State_Control_t *ctrl );
@@ -20,8 +39,8 @@ static void System_State5( System_State_Control_t *ctrl );
 static void System_State6( System_State_Control_t *ctrl );
 static void System_State7( System_State_Control_t *ctrl );
 static void System_State8( System_State_Control_t *ctrl );
-static void System_State9( System_State_Control_t *ctrl );
 static void System_State_Process( System_State_Control_t *ctrl );
+static void System_State_RGB( System_State_Control_t *ctrl );
 
 /*******************************************************************************
  * Public function definitions.
@@ -39,7 +58,7 @@ bool StateMachine_Init( System_State_Control_t *ctrl )
     if ( ctrl != NULL )
     {   
         void *state_addr[NUM_STATES] = { System_State1, System_State2, System_State3, System_State4, System_State5,
-            System_State6, System_State7, System_State8, System_State9 }; 
+            System_State6, System_State7, System_State8 }; 
 
        //Initialize parameters.
        for ( uint8_t i = 0; i < NUM_STATES; i++ )
@@ -91,7 +110,7 @@ static void System_State_Process( System_State_Control_t *ctrl )
         ctrl->CurrentState++;
 
         //Check state limits.
-        if ( ctrl->CurrentState > SYSTEM_STATE_9_E )
+        if ( ctrl->CurrentState > SYSTEM_STATE_8_E )
         {
             ctrl->CurrentState = SYSTEM_STATE_1_E;
         }
@@ -107,11 +126,85 @@ static void System_State_Process( System_State_Control_t *ctrl )
         //Check state limits.
         if ( ctrl->CurrentState < SYSTEM_STATE_1_E )
         {
-            ctrl->CurrentState = SYSTEM_STATE_9_E;
+            ctrl->CurrentState = SYSTEM_STATE_8_E;
         }
 
         ctrl->Btn2Press = false;
         ctrl->StateNewCall = true;
+    }
+}
+
+/**
+ * @brief This function sets the onboard RGB LED according to the current color/state of the state machine.
+ * 
+ * @param ctrl Pointer to state machine control struct.
+ */
+static void System_State_RGB( System_State_Control_t *ctrl )
+{
+    switch ( ctrl->CurrentState )
+    {
+        case RGB_COLOR_OFF_E:
+            LED_RED_OFF();
+            LED_GREEN_OFF();
+            LED_BLUE_OFF();
+        break;
+
+        case RGB_COLOR_RED_E:
+            LED_RED_OFF();
+            LED_GREEN_OFF();
+            LED_BLUE_OFF();
+            LED_RED_ON();
+        break;
+
+        case RGB_COLOR_YELLOW_E:
+            LED_RED_OFF();
+            LED_GREEN_OFF();
+            LED_BLUE_OFF();
+            LED_RED_ON();
+            LED_GREEN_ON();
+        break;
+
+        case RGB_COLOR_MAGENTA_E:
+            LED_RED_OFF();
+            LED_GREEN_OFF();
+            LED_BLUE_OFF();
+            LED_RED_ON();
+            LED_BLUE_ON();
+        break;
+
+        case RGB_COLOR_GREEN_E:
+            LED_RED_OFF();
+            LED_GREEN_OFF();
+            LED_BLUE_OFF();
+            LED_GREEN_ON();
+        break;
+
+        case RGB_COLOR_CYAN_E:
+            LED_RED_OFF();
+            LED_GREEN_OFF();
+            LED_BLUE_OFF();
+            LED_GREEN_ON();
+            LED_BLUE_ON();
+        break;
+
+        case RGB_COLOR_BLUE_E:
+            LED_RED_OFF();
+            LED_GREEN_OFF();
+            LED_BLUE_OFF();
+            LED_BLUE_ON();
+        break;
+
+        case RGB_COLOR_WHITE_E:
+            LED_RED_OFF();
+            LED_GREEN_OFF();
+            LED_BLUE_OFF();
+            LED_RED_ON();
+            LED_GREEN_ON();
+            LED_BLUE_ON();
+        break;
+
+        default:
+        break;
     }
 }
 
@@ -126,6 +219,7 @@ static void System_State1( System_State_Control_t *ctrl )
     if ( ctrl->StateNewCall )
     {
         PRINTF( "Executing state 1\r\n" );
+        System_State_RGB( ctrl );
         ctrl->StateNewCall = false;
     }
 
@@ -144,6 +238,7 @@ static void System_State2( System_State_Control_t *ctrl )
     if ( ctrl->StateNewCall )
     {
         PRINTF( "Executing state 2\r\n" );
+        System_State_RGB( ctrl );
         ctrl->StateNewCall = false;
     }
 
@@ -162,9 +257,10 @@ static void System_State3( System_State_Control_t *ctrl )
     if ( ctrl->StateNewCall )
     {
         PRINTF( "Executing state 3\r\n" );
+        System_State_RGB( ctrl );
         ctrl->StateNewCall = false;
     }
-
+    
     //Check state transition.
     System_State_Process( ctrl );
 }
@@ -180,9 +276,10 @@ static void System_State4( System_State_Control_t *ctrl )
     if ( ctrl->StateNewCall )
     {
         PRINTF( "Executing state 4\r\n" );
+        System_State_RGB( ctrl );
         ctrl->StateNewCall = false;
     }
-
+    
     //Check state transition.
     System_State_Process( ctrl );
 }
@@ -198,9 +295,10 @@ static void System_State5( System_State_Control_t *ctrl )
     if ( ctrl->StateNewCall )
     {
         PRINTF( "Executing state 5\r\n" );
+        System_State_RGB( ctrl );
         ctrl->StateNewCall = false;
     }
-
+    
     //Check state transition.
     System_State_Process( ctrl );
 }
@@ -216,6 +314,7 @@ static void System_State6( System_State_Control_t *ctrl )
     if ( ctrl->StateNewCall )
     {
         PRINTF( "Executing state 6\r\n" );
+        System_State_RGB( ctrl );
         ctrl->StateNewCall = false;
     }
 
@@ -234,6 +333,7 @@ static void System_State7( System_State_Control_t *ctrl )
     if ( ctrl->StateNewCall )
     {
         PRINTF( "Executing state 7\r\n" );
+        System_State_RGB( ctrl );
         ctrl->StateNewCall = false;
     }
 
@@ -252,27 +352,10 @@ static void System_State8( System_State_Control_t *ctrl )
     if ( ctrl->StateNewCall )
     {
         PRINTF( "Executing state 8\r\n" );
+        System_State_RGB( ctrl );
         ctrl->StateNewCall = false;
     }
-
-    //Check state transition.
-    System_State_Process( ctrl );
-}
-
-/**
- * @brief State 9 function.
- * 
- * @param ctrl Pointer to state machine control struct.
- */
-static void System_State9( System_State_Control_t *ctrl )
-{
-    //First iteration.
-    if ( ctrl->StateNewCall )
-    {
-        PRINTF( "Executing state 9\r\n" );
-        ctrl->StateNewCall = false;
-    }
-
+    
     //Check state transition.
     System_State_Process( ctrl );
 }

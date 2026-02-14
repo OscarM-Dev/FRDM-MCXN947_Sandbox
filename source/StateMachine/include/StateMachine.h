@@ -12,12 +12,13 @@
 #include "fsl_common.h"
 #include "fsl_debug_console.h"
 #include "fsl_gpio.h"
+#include "fsl_port.h"
 #include "board.h"
 
 /*******************************************************************************
  * Macros
  ******************************************************************************/
-#define NUM_STATES  9
+#define NUM_STATES  8
 
 /*******************************************************************************
  * Enums
@@ -36,7 +37,6 @@ typedef enum System_States
     SYSTEM_STATE_6_E,
     SYSTEM_STATE_7_E,
     SYSTEM_STATE_8_E,
-    SYSTEM_STATE_9_E,
     SYSTEM_STATE_UNDEFINED_E
 } System_States_t;
 
