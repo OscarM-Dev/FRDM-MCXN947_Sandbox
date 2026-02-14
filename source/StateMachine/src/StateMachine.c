@@ -21,6 +21,7 @@ static void System_State6( System_State_Control_t *ctrl );
 static void System_State7( System_State_Control_t *ctrl );
 static void System_State8( System_State_Control_t *ctrl );
 static void System_State9( System_State_Control_t *ctrl );
+static void System_State_Process( System_State_Control_t *ctrl );
 
 /*******************************************************************************
  * Public function definitions.
@@ -48,6 +49,8 @@ bool StateMachine_Init( System_State_Control_t *ctrl )
 
        ctrl->CurrentState = SYSTEM_STATE_1_E;
        ctrl->StateNewCall = true;
+       ctrl->Btn1Press = false;
+       ctrl->Btn2Press = false;
        result = true;
     }
 
@@ -77,13 +80,57 @@ bool StateMachine_Run( System_State_Control_t *ctrl )
  * Private function definitions.
  ******************************************************************************/
 /**
+ * @brief This function process the button events for changing the system current state.
+ * 
+ * @param ctrl Pointer to state machine control struct.
+ */
+static void System_State_Process( System_State_Control_t *ctrl )
+{
+    if ( ctrl->Btn1Press )
+    {
+        ctrl->CurrentState++;
+
+        //Check state limits.
+        if ( ctrl->CurrentState > SYSTEM_STATE_9_E )
+        {
+            ctrl->CurrentState = SYSTEM_STATE_1_E;
+        }
+
+        ctrl->Btn1Press = false;
+        ctrl->StateNewCall = true;
+    }
+
+    else if ( ctrl->Btn2Press )
+    {
+        ctrl->CurrentState--;
+
+        //Check state limits.
+        if ( ctrl->CurrentState < SYSTEM_STATE_1_E )
+        {
+            ctrl->CurrentState = SYSTEM_STATE_9_E;
+        }
+
+        ctrl->Btn2Press = false;
+        ctrl->StateNewCall = true;
+    }
+}
+
+/**
  * @brief State 1 function.
  * 
  * @param ctrl Pointer to state machine control struct.
  */
 static void System_State1( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 1\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }
 
 /**
@@ -93,7 +140,15 @@ static void System_State1( System_State_Control_t *ctrl )
  */
 static void System_State2( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 2\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }
 
 /**
@@ -103,7 +158,15 @@ static void System_State2( System_State_Control_t *ctrl )
  */
 static void System_State3( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 3\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }
 
 /**
@@ -113,7 +176,15 @@ static void System_State3( System_State_Control_t *ctrl )
  */
 static void System_State4( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 4\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }
 
 /**
@@ -123,7 +194,15 @@ static void System_State4( System_State_Control_t *ctrl )
  */
 static void System_State5( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 5\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }
 
 /**
@@ -133,7 +212,15 @@ static void System_State5( System_State_Control_t *ctrl )
  */
 static void System_State6( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 6\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }
 
 /**
@@ -143,7 +230,15 @@ static void System_State6( System_State_Control_t *ctrl )
  */
 static void System_State7( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 7\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }
 
 /**
@@ -153,7 +248,15 @@ static void System_State7( System_State_Control_t *ctrl )
  */
 static void System_State8( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 8\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }
 
 /**
@@ -163,5 +266,13 @@ static void System_State8( System_State_Control_t *ctrl )
  */
 static void System_State9( System_State_Control_t *ctrl )
 {
+    //First iteration.
+    if ( ctrl->StateNewCall )
+    {
+        PRINTF( "Executing state 9\r\n" );
+        ctrl->StateNewCall = false;
+    }
 
+    //Check state transition.
+    System_State_Process( ctrl );
 }

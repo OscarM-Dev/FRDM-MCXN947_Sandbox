@@ -57,8 +57,10 @@ typedef void ( *SystemState ) ( System_State_Control_t * );     //Typedef for po
 typedef struct System_State_Control
 {
     SystemState StateHandler[NUM_STATES];   //Array of pointers to state functions.
-    uint8_t CurrentState;                   //Current state index.
-    bool StateNewCall;                      //Flag for new state calls.
+    int8_t CurrentState;                   //Current state index.
+    bool StateNewCall;                     //Flag for new state calls.
+    bool Btn1Press;
+    bool Btn2Press;
 } System_State_Control_t;
 
 /*******************************************************************************

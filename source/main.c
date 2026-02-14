@@ -24,6 +24,8 @@
  ******************************************************************************/
 #define SW2_ACTIVE  0x00800000
 #define SW3_ACTIVE  0x00000040
+#define CORE_CLK    150000000
+#define STATE_MACHINE_DELAY_US  250000
 
 /*******************************************************************************
  * Private functions prototypes
@@ -33,8 +35,7 @@ static void GPIO_Init( void );
 /*******************************************************************************
  * Private global data.
  ******************************************************************************/
-static volatile uint8_t SW2PressCount = 0;
-static volatile uint8_t SW3PressCount = 0;
+static System_State_Control_t StateMachine;
 
 /*******************************************************************************
  * Private functions definition
@@ -79,14 +80,14 @@ void BOARD_SW_IRQ_HANDLER( void )
     {
         //SW2 button pressed.
         gpio0ClearInterruptMask |= SW2_ACTIVE;
-        SW2PressCount++;
+        StateMachine.Btn1Press = true;
     }
 
     if ( gpio0InterruptRegister & SW3_ACTIVE )
     {
         //SW3 button pressed.
         gpio0ClearInterruptMask |= SW3_ACTIVE;
-        SW3PressCount++;
+        StateMachine.Btn2Press = true;
     }
 
     GPIO_GpioClearInterruptFlags( GPIO0, gpio0ClearInterruptMask );
@@ -99,14 +100,15 @@ int main(void)
 {
     BOARD_InitHardware();
     GPIO_Init();
+    StateMachine_Init( &StateMachine );
 
-    /* Print a note to terminal. */
-    //PRINTF("\r\n GPIO Driver example\r\n");
-    //PRINTF("\r\n Press %s to turn on/off a LED \r\n", BOARD_SW_NAME);
+    //Print a note to terminal.
+    PRINTF("State machine project\r\n");
 
     while (1)
     {
-    
+        StateMachine_Run( &StateMachine );
+        SDK_DelayAtLeastUs( STATE_MACHINE_DELAY_US, CORE_CLK );
     }
 
 }
