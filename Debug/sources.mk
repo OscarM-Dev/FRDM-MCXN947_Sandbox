@@ -18,6 +18,7 @@ board \
 component/uart \
 device \
 drivers \
+source/Queue/src \
 source/StateMachine/src \
 source \
 startup \

@@ -13,6 +13,7 @@ RM := rm -rf
 -include utilities/subdir.mk
 -include startup/subdir.mk
 -include source/StateMachine/src/subdir.mk
+-include source/Queue/src/subdir.mk
 -include source/subdir.mk
 -include drivers/subdir.mk
 -include device/subdir.mk
