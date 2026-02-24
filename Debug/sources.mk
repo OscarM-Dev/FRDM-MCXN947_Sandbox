@@ -19,6 +19,7 @@ component/uart \
 device \
 drivers \
 source/Queue/src \
+source/SchedulerFIFO/src \
 source/StateMachine/src \
 source \
 startup \
