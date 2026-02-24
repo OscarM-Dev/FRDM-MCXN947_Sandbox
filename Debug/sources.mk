@@ -21,6 +21,7 @@ drivers \
 source/Queue/src \
 source/SchedulerFIFO/src \
 source/StateMachine/src \
+source/Tasks/src \
 source \
 startup \
 utilities/debug_console_lite \

@@ -12,6 +12,7 @@ RM := rm -rf
 -include utilities/debug_console_lite/subdir.mk
 -include utilities/subdir.mk
 -include startup/subdir.mk
+-include source/Tasks/src/subdir.mk
 -include source/StateMachine/src/subdir.mk
 -include source/SchedulerFIFO/src/subdir.mk
 -include source/Queue/src/subdir.mk
