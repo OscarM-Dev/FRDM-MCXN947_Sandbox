@@ -17,15 +17,14 @@
 #include "app.h"
 #include "pin_mux.h"
 #include "board.h"
-#include "StateMachine.h"
+#include "SchedulerFIFO.h"
 
 /*******************************************************************************
  * Macros
  ******************************************************************************/
 #define SW2_ACTIVE  0x00800000
 #define SW3_ACTIVE  0x00000040
-#define CORE_CLK    150000000
-#define STATE_MACHINE_DELAY_US  250000
+#define SCHEDULER_DELAY 1000
 
 /*******************************************************************************
  * Private functions prototypes
@@ -35,7 +34,7 @@ static void GPIO_Init( void );
 /*******************************************************************************
  * Private global data.
  ******************************************************************************/
-static System_State_Control_t StateMachine;
+static Scheduler_FIFO_t Scheduler;
 
 /*******************************************************************************
  * Private functions definition
@@ -72,6 +71,9 @@ static void GPIO_Init( void )
  */
 void BOARD_SW_IRQ_HANDLER( void )
 {
+    static uint8_t btn1Count = 0;
+    static uint8_t btn2Count = 0;
+
     uint32_t gpio0InterruptRegister = GPIO_GpioGetInterruptFlags( GPIO0 );
     uint32_t gpio0ClearInterruptMask = 0;
 
@@ -80,14 +82,28 @@ void BOARD_SW_IRQ_HANDLER( void )
     {
         //SW2 button pressed.
         gpio0ClearInterruptMask |= SW2_ACTIVE;
-        StateMachine.Btn1Press = true;
+        btn1Count++;
+        
+        if ( btn1Count > NUM_TASKS )
+        {
+            btn1Count = 1;
+        }
+
+        Scheduler_FIFO_ActivateTask( &Scheduler, btn1Count );
     }
 
     if ( gpio0InterruptRegister & SW3_ACTIVE )
     {
         //SW3 button pressed.
         gpio0ClearInterruptMask |= SW3_ACTIVE;
-        StateMachine.Btn2Press = true;
+        btn2Count++;
+
+        if ( btn2Count > NUM_TASKS )
+        {
+            btn2Count = 1;
+        }
+
+        Scheduler_FIFO_DeactivateTask( &Scheduler, btn2Count );
     }
 
     GPIO_GpioClearInterruptFlags( GPIO0, gpio0ClearInterruptMask );
@@ -100,15 +116,15 @@ int main(void)
 {
     BOARD_InitHardware();
     GPIO_Init();
-    StateMachine_Init( &StateMachine );
+    Scheduler_FIFO_Init( &Scheduler );
 
     //Print a note to terminal.
-    PRINTF("State machine project\r\n");
+    PRINTF("FIFO Scheduler project\r\n");
 
     while (1)
     {
-        StateMachine_Run( &StateMachine );
-        SDK_DelayAtLeastUs( STATE_MACHINE_DELAY_US, CORE_CLK );
+        Scheduler_FIFO_Run( &Scheduler );
+        SDK_DelayAtLeastUs( SCHEDULER_DELAY, CORE_CLK );
     }
 
 }
