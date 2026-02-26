@@ -28,6 +28,7 @@ void Queue_InitQueue( Queue_t *queue, uint32_t elements, uint8_t size, void *buf
         queue->Full = false;
         queue->Head = 0;
         queue->Tail = 0;
+        queue->Peek = 0;
         queue->Elements = elements;
         queue->Size = size;
         queue->Buffer = buffer;
@@ -94,7 +95,7 @@ bool Queue_WriteData( Queue_t *queue, void *data )
  * @note Is optional to read the info from the tail element, if not needed the tail element info is just discarded.
  * 
  * @param queue Pointer to queue control structure.
- * @param data Pointer to data to write.
+ * @param data Pointer to data to store read info.
  * @retval Operation result.
  */
 bool Queue_ReadData( Queue_t *queue, void *data )
@@ -135,6 +136,46 @@ bool Queue_ReadData( Queue_t *queue, void *data )
             if ( queue->Tail == queue->Head ) 
             {
                 queue->Empty = true;
+            }
+
+            status = true;  //Succesfull operation.
+        }        
+    }
+
+    return status;   
+}
+
+/**
+ * @brief This function reads a single data from the queue without eliminating it.
+ * For achieving this it copies and pastes size bytes of info from the peek element of the queue to the data.
+ * 
+ * @note Once the reading operation is done it increments peek by one.
+ * @note The data read still exists in the queue.
+ * 
+ * @param queue Pointer to queue control structure.
+ * @param data Pointer to data to store read info.
+ * @retval Operation result.
+ */
+bool Queue_PeekData( Queue_t *queue, void *data )
+{
+    bool status = false;
+
+    if ( ( queue != NULL ) && ( data != NULL ) )
+    {
+        uint32_t baseAdd = ( uint32_t ) queue->Buffer;
+        uint32_t actualAdd = 0;
+
+        //Verifying if the queue has data available to be read.
+        if ( !queue->Empty )
+        {
+            actualAdd = baseAdd + ( queue->Peek * queue->Size );
+            memcpy( data, ( void* ) actualAdd, queue->Size );
+
+            queue->Peek++;      //next value to be read.
+
+            if ( queue->Peek > queue->Elements - 1 ) 
+            {   //Reseting peek index.
+                queue->Peek = 0;
             }
 
             status = true;  //Succesfull operation.

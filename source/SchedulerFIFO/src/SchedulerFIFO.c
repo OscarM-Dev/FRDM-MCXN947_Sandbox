@@ -8,3 +8,118 @@
  * Includes
  ******************************************************************************/
 #include "SchedulerFIFO.h"
+
+/*******************************************************************************
+ * Private global data.
+ ******************************************************************************/
+static Task_IDs_t TaskBuffer[NUM_TASKS];
+
+/*******************************************************************************
+ * Public function definitions.
+ ******************************************************************************/
+/**
+ * @brief This function initialices the scheduler control struct. 
+ * 
+ * @param ctrl Pointer to scheduler control struct.
+ * @retval Operation result.
+ */
+bool Scheduler_FIFO_Init( Scheduler_FIFO_t* ctrl )
+{
+    bool result = false;
+
+    if ( ctrl != NULL )
+    {
+        Task_Init( ctrl->Tasks );
+        Queue_InitQueue( &ctrl->Queue, NUM_TASKS, sizeof( Task_IDs_t ), TaskBuffer );
+        result = true;
+    }
+
+    return result;
+}
+
+/**
+ * @brief This function activates a task by changing its status to ready and registering it to the task queue.
+ * 
+ * @param ctrl Pointer to scheduler control struct.
+ * @param taskId Task Id to active.
+ * @retval Operation result.
+ */
+bool Scheduler_FIFO_ActivateTask( Scheduler_FIFO_t* ctrl, Task_IDs_t taskId )
+{
+    bool result = false;
+
+    if ( ( ctrl != NULL ) && ( taskId != TASK_ID_UNDEFINED_E ) )
+    {
+        //Activate task  
+        ctrl->Tasks[taskId - 1].Status = TASK_STATUS_READY_E;      
+
+        //Register task in queue.
+        Queue_WriteData( &ctrl->Queue, &taskId );
+
+        result = true;
+    }
+
+    return result;
+}
+
+/**
+ * @brief This function deactivates a task by changing its status to blocked and eliminating it from the task queue.
+ * 
+ * @param ctrl Pointer to the scheduler control struct.
+ * @param taskId Task id to deactivate.
+ * @retval Operation result.
+ */
+bool Scheduler_FIFO_DeactivateTask( Scheduler_FIFO_t* ctrl, Task_IDs_t taskId )
+{
+    bool result = false;
+
+    if ( ( ctrl != NULL ) && ( taskId != TASK_ID_UNDEFINED_E ) )
+    {
+        //Deactivate task        
+        ctrl->Tasks[taskId - 1].Status = TASK_STATUS_BLOCKED_E;
+
+        //Eliminate task in queue.
+        Queue_ReadData( &ctrl->Queue, NULL );
+
+        result = true;
+    }
+
+    return result;   
+}
+
+/**
+ * @brief This function runs the FIFO scheduler.
+ * 
+ * @param ctrl Pointer to the scheduler control struct.
+ * @retval Operation result.
+ */
+bool Scheduler_FIFO_Run( Scheduler_FIFO_t* ctrl )
+{
+    bool result = false;
+
+    if ( ctrl != NULL )
+    {
+        uint8_t taskID = TASK_ID_UNDEFINED_E;
+
+        //Execute activated tasks.
+        for ( uint8_t i = ctrl->Queue.Tail; i < ctrl->Queue.Elements; i++ )
+        {
+            if ( Queue_PeekData( &ctrl->Queue, &taskID ) )
+            {   //Data available for read.
+                if ( ctrl->Tasks[taskID - 1].Status == TASK_STATUS_READY_E )
+                {   //Execute task.
+                    ctrl->Tasks[taskID - 1].TaskFunction( ctrl->Tasks[taskID - 1].BurstTime );
+                }
+            }
+
+            else
+            {   //Queue empty.
+                break;
+            }
+        }
+
+        result = true;
+    }
+
+    return result;
+}

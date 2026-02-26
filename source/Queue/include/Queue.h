@@ -27,6 +27,7 @@ typedef struct Queue
     uint8_t Size;       //Number of bytes of each element of the queue.
     uint8_t Head;       //Index for writing.
     uint8_t Tail;       //Index for reading.
+    uint8_t Peek;       //Index for peeking.
     bool Empty;         //Bool flag that indicates if queue is empty.
     bool Full;          //Bool flag that indicates if queue is full.
 } Queue_t;
@@ -37,6 +38,7 @@ typedef struct Queue
 void Queue_InitQueue( Queue_t *queue, uint32_t elements, uint8_t size, void *buffer );
 bool Queue_WriteData( Queue_t *queue, void *data );
 bool Queue_ReadData( Queue_t *queue, void *data );
+bool Queue_PeekData( Queue_t *queue, void *data );
 bool Queue_IsQueueEmpty( Queue_t *queue );
 void Queue_FlushQueue( Queue_t *queue );
 

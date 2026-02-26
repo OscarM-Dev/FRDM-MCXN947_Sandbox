@@ -14,7 +14,6 @@
 #include "fsl_gpio.h"
 #include "fsl_port.h"
 #include "board.h"
-#include "Queue.h"
 
 /*******************************************************************************
  * Macros
