@@ -28,6 +28,7 @@ typedef struct Queue
     uint8_t Head;       //Index for writing.
     uint8_t Tail;       //Index for reading.
     uint8_t Peek;       //Index for peeking.
+    uint8_t DataCount;  //Available data count.
     bool Empty;         //Bool flag that indicates if queue is empty.
     bool Full;          //Bool flag that indicates if queue is full.
 } Queue_t;

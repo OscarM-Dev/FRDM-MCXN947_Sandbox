@@ -24,7 +24,7 @@
  ******************************************************************************/
 #define SW2_ACTIVE  0x00800000
 #define SW3_ACTIVE  0x00000040
-#define SCHEDULER_DELAY 1000
+#define SCHEDULER_DELAY 10000
 
 /*******************************************************************************
  * Private functions prototypes
@@ -71,8 +71,8 @@ static void GPIO_Init( void )
  */
 void BOARD_SW_IRQ_HANDLER( void )
 {
-    static uint8_t btn1Count = 0;
-    static uint8_t btn2Count = 0;
+    static volatile uint8_t btn1Count = 0;
+    static volatile uint8_t btn2Count = 0;
 
     uint32_t gpio0InterruptRegister = GPIO_GpioGetInterruptFlags( GPIO0 );
     uint32_t gpio0ClearInterruptMask = 0;

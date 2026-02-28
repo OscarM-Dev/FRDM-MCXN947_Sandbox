@@ -75,7 +75,7 @@ typedef struct Task_Control
     Task TaskFunction;
     Task_IDs_t TaskId;
     uint32_t BurstTime;     //us.
-    Task_Status_t Status;
+    volatile Task_Status_t Status;
 } Task_Control_t;
 
 /*******************************************************************************

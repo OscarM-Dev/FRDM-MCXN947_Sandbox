@@ -89,6 +89,11 @@ bool Scheduler_FIFO_DeactivateTask( Scheduler_FIFO_t* ctrl, Task_IDs_t taskId )
 
 /**
  * @brief This function runs the FIFO scheduler.
+ * @note The scheduler traverse the queue only once.
+ * @note Peek always starts from Tail index.
+ * @note The data available count takes the current value of Datacount member of queue, if there is a change
+ * in this data like increment o decrement caused by head or tail ( buttons ) the change will be present in the next
+ * scheduler iteration.
  * 
  * @param ctrl Pointer to the scheduler control struct.
  * @retval Operation result.
@@ -100,22 +105,21 @@ bool Scheduler_FIFO_Run( Scheduler_FIFO_t* ctrl )
     if ( ctrl != NULL )
     {
         uint8_t taskID = TASK_ID_UNDEFINED_E;
+        uint8_t processDataCount = 0;
+        uint8_t currentAvailableData = ctrl->Queue.DataCount;
+        ctrl->Queue.Peek = ctrl->Queue.Tail;
 
-        //Execute activated tasks.
-        for ( uint8_t i = ctrl->Queue.Tail; i < ctrl->Queue.Elements; i++ )
-        {
-            if ( Queue_PeekData( &ctrl->Queue, &taskID ) )
-            {   //Data available for read.
-                if ( ctrl->Tasks[taskID - 1].Status == TASK_STATUS_READY_E )
-                {   //Execute task.
-                    ctrl->Tasks[taskID - 1].TaskFunction( ctrl->Tasks[taskID - 1].BurstTime );
-                }
+        //Execute current activated tasks.
+        while( processDataCount < currentAvailableData )
+        {   
+            Queue_PeekData( &ctrl->Queue, &taskID );
+
+            if ( ctrl->Tasks[taskID - 1].Status == TASK_STATUS_READY_E )
+            {   //Execute task.
+                 ctrl->Tasks[taskID - 1].TaskFunction( ctrl->Tasks[taskID - 1].BurstTime );
             }
 
-            else
-            {   //Queue empty.
-                break;
-            }
+            processDataCount++;
         }
 
         result = true;

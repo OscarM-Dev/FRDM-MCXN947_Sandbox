@@ -61,6 +61,7 @@ bool Queue_WriteData( Queue_t *queue, void *data )
             actualAdd = baseAdd + ( queue->Head * queue->Size );
             memcpy( ( void* ) actualAdd, data, queue->Size );
             queue->Head++;      //next value to be written.
+            queue->DataCount++;
 
             if ( queue->Head > queue->Elements - 1 )
             {   //Reseting write index.
@@ -121,6 +122,7 @@ bool Queue_ReadData( Queue_t *queue, void *data )
             //Clearing data read from queue.
             memset( ( void* ) actualAdd, 0, queue->Size );
             queue->Tail++;      //next value to be read.
+            queue->DataCount--;
 
             if ( queue->Tail > queue->Elements - 1 ) 
             {   //Reseting read index.
