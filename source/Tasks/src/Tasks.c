@@ -46,6 +46,15 @@ bool Task_Init( Task_Control_t* ctrl )
             ctrl[i].Status = TASK_STATUS_BLOCKED_E;
             ctrl[i].BurstTime = TASK_DELAY_250_MS;
         }
+
+        ctrl[TASK_ID_1_E - 1].Task_Priority = TASK_PRIORITY_2;
+        ctrl[TASK_ID_2_E - 1].Task_Priority = TASK_PRIORITY_3;
+        ctrl[TASK_ID_3_E - 1].Task_Priority = TASK_PRIORITY_1;
+        ctrl[TASK_ID_4_E - 1].Task_Priority = TASK_PRIORITY_4;
+        ctrl[TASK_ID_5_E - 1].Task_Priority = TASK_PRIORITY_2;
+        ctrl[TASK_ID_6_E - 1].Task_Priority = TASK_PRIORITY_1;
+        ctrl[TASK_ID_7_E - 1].Task_Priority = TASK_PRIORITY_3;
+        ctrl[TASK_ID_8_E - 1].Task_Priority = TASK_PRIORITY_4;
                 
         result = true;
     }

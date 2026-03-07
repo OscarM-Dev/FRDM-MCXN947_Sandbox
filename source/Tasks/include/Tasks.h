@@ -63,6 +63,19 @@ typedef enum Task_Status
     TASK_STATUS_BLOCKED_E
 } Task_Status_t;
 
+/**
+ * @brief Task priority enum.
+ * 
+ */
+typedef enum Task_Priority
+{
+    TASK_PRIORITY_UNDEFINED,
+    TASK_PRIORITY_1,
+    TASK_PRIORITY_2,
+    TASK_PRIORITY_3,
+    TASK_PRIORITY_4
+} Task_Priority_t;
+
 /*******************************************************************************
  * Stucts and Unions.
  ******************************************************************************/
@@ -74,6 +87,7 @@ typedef struct Task_Control
 {
     Task TaskFunction;
     Task_IDs_t TaskId;
+    Task_Priority_t Task_Priority;
     uint32_t BurstTime;     //us.
     volatile Task_Status_t Status;
 } Task_Control_t;
