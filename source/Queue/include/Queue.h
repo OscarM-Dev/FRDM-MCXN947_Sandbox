@@ -39,6 +39,7 @@ typedef struct Queue
 void Queue_InitQueue( Queue_t *queue, uint32_t elements, uint8_t size, void *buffer );
 bool Queue_WriteData( Queue_t *queue, void *data );
 bool Queue_ReadData( Queue_t *queue, void *data );
+bool Queue_ReadDataAt( Queue_t *queue, uint8_t index, void *data );
 bool Queue_PeekData( Queue_t *queue, void *data );
 bool Queue_IsQueueEmpty( Queue_t *queue );
 void Queue_FlushQueue( Queue_t *queue );

@@ -148,6 +148,87 @@ bool Queue_ReadData( Queue_t *queue, void *data )
 }
 
 /**
+ * @brief This function reads the info from the index element of the queue.
+ * 
+ * @note After reading from the index element, the other queue elements are shifted.
+ * @note The data read no longer exists in the queue.
+ * @note It also determines wheter the queue is empty or not after reading from it.
+ * @note Is optional to read the info from the index element, if not needed the index element info is just discarded.
+ * 
+ * @param queue Pointer to queue control structure.
+ * @param index Index element of interest.
+ * @param data Pointer to data to store read info.
+ * @retval Operation result.
+ */
+bool Queue_ReadDataAt( Queue_t *queue, uint8_t index, void *data )
+{
+    bool status = false;
+
+    if ( ( queue != NULL ) && ( index < queue->DataCount ) )
+    {
+        uint32_t currentAdd = 0;
+        uint8_t next = 0;
+        uint8_t current = 0;
+        uint8_t last = 0;
+        uint32_t baseAdd = ( uint32_t ) queue->Buffer;
+
+        //Verifying if the queue has data available to be read.
+        if ( !queue->Empty )
+        {
+            currentAdd = ( queue->Tail + index ) % queue->Elements;
+            currentAdd = baseAdd + ( currentAdd * queue->Size );
+
+            //Copy info to data if needed.
+            if ( data != NULL )
+            {
+                memcpy( data, ( void* ) currentAdd, queue->Size );
+            }       
+
+            //Clearing data read from queue.
+            memset( ( void* ) currentAdd, 0, queue->Size );
+
+            //Shift elements to fill the removed position
+            for ( uint8_t i = index; i < ( queue->DataCount - 1 ); i++ )
+            {
+                current = ( queue->Tail + i ) % queue->Elements;
+                next = ( queue->Tail + i + 1 ) % queue->Elements;
+
+                memcpy( ( void* ) ( baseAdd + ( current * queue->Size ) ),
+                    ( void* )( baseAdd + ( next * queue->Size ) ), queue->Size );
+            }
+
+            //Clean last data shifted.
+            last = ( queue->Tail + queue->DataCount - 1 ) % queue->Elements;
+            memset(( void* ) ( baseAdd + ( last * queue->Size ) ), 0, queue->Size );
+
+            //Move head one position backwards.
+            if ( queue->Head == 0 )
+            {
+                queue->Head = queue->Elements - 1;
+            }
+
+            else
+            {
+                queue->Head--;
+            }
+
+            //Update data count.
+            queue->DataCount--;
+
+            //Update empty flag if needed.
+            if ( queue->DataCount == 0 )
+            {
+                queue->Empty = true;
+            }
+
+            status = true;
+        }
+    }
+
+    return status;  
+}
+
+/**
  * @brief This function reads a single data from the queue without eliminating it.
  * For achieving this it copies and pastes size bytes of info from the peek element of the queue to the data.
  * 
