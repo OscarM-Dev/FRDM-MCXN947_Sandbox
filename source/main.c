@@ -17,14 +17,16 @@
 #include "app.h"
 #include "pin_mux.h"
 #include "board.h"
-#include "SchedulerFIFO.h"
+#include "SchedulerPriority.h"
 
 /*******************************************************************************
  * Macros
  ******************************************************************************/
 #define SW2_ACTIVE  0x00800000
 #define SW3_ACTIVE  0x00000040
-#define SCHEDULER_DELAY 10000
+#define SCHEDULER_DELAY 100
+#define BTN1_MAX_TASK_ID 7
+#define BTN2_MAX_TASK_ID 8
 
 /*******************************************************************************
  * Private functions prototypes
@@ -34,7 +36,7 @@ static void GPIO_Init( void );
 /*******************************************************************************
  * Private global data.
  ******************************************************************************/
-static Scheduler_FIFO_t Scheduler;
+static Scheduler_Priority_t Scheduler;
 
 /*******************************************************************************
  * Private functions definition
@@ -71,8 +73,8 @@ static void GPIO_Init( void )
  */
 void BOARD_SW_IRQ_HANDLER( void )
 {
-    static volatile uint8_t btn1Count = 0;
-    static volatile uint8_t btn2Count = 0;
+    static volatile uint8_t btn1Count = 1;
+    static volatile uint8_t btn2Count = 2;
 
     uint32_t gpio0InterruptRegister = GPIO_GpioGetInterruptFlags( GPIO0 );
     uint32_t gpio0ClearInterruptMask = 0;
@@ -82,28 +84,28 @@ void BOARD_SW_IRQ_HANDLER( void )
     {
         //SW2 button pressed.
         gpio0ClearInterruptMask |= SW2_ACTIVE;
-        btn1Count++;
+        btn1Count += 2;
         
-        if ( btn1Count > NUM_TASKS )
+        if ( btn1Count > BTN1_MAX_TASK_ID )
         {
             btn1Count = 1;
         }
 
-        Scheduler_FIFO_ActivateTask( &Scheduler, btn1Count );
+        Scheduler_Priority_ActivateTask( &Scheduler, btn1Count );
     }
 
     if ( gpio0InterruptRegister & SW3_ACTIVE )
     {
         //SW3 button pressed.
         gpio0ClearInterruptMask |= SW3_ACTIVE;
-        btn2Count++;
+        btn2Count += 2;
 
-        if ( btn2Count > NUM_TASKS )
+        if ( btn2Count > BTN2_MAX_TASK_ID )
         {
-            btn2Count = 1;
+            btn2Count = 2;
         }
 
-        Scheduler_FIFO_DeactivateTask( &Scheduler, btn2Count );
+        Scheduler_Priority_ActivateTask( &Scheduler, btn1Count );
     }
 
     GPIO_GpioClearInterruptFlags( GPIO0, gpio0ClearInterruptMask );
@@ -116,14 +118,14 @@ int main(void)
 {
     BOARD_InitHardware();
     GPIO_Init();
-    Scheduler_FIFO_Init( &Scheduler );
+    Scheduler_Priority_Init( &Scheduler );
 
     //Print a note to terminal.
-    PRINTF("FIFO Scheduler project\r\n");
+    PRINTF("Priority Scheduler project\r\n");
 
     while (1)
     {
-        Scheduler_FIFO_Run( &Scheduler );
+        Scheduler_Priority_Run( &Scheduler );
         SDK_DelayAtLeastUs( SCHEDULER_DELAY, CORE_CLK );
     }
 
