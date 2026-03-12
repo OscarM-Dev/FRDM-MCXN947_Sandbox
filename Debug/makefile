@@ -14,6 +14,7 @@ RM := rm -rf
 -include startup/subdir.mk
 -include source/Tasks/src/subdir.mk
 -include source/StateMachine/src/subdir.mk
+-include source/SchedulerPriority/src/subdir.mk
 -include source/SchedulerFIFO/src/subdir.mk
 -include source/Queue/src/subdir.mk
 -include source/subdir.mk

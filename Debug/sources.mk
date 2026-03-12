@@ -20,6 +20,7 @@ device \
 drivers \
 source/Queue/src \
 source/SchedulerFIFO/src \
+source/SchedulerPriority/src \
 source/StateMachine/src \
 source/Tasks/src \
 source \
