@@ -24,7 +24,7 @@
  ******************************************************************************/
 #define SW2_ACTIVE  0x00800000
 #define SW3_ACTIVE  0x00000040
-#define SCHEDULER_DELAY 100
+#define SCHEDULER_DELAY 100000
 #define BTN1_MAX_TASK_ID 7
 #define BTN2_MAX_TASK_ID 8
 
@@ -84,28 +84,24 @@ void BOARD_SW_IRQ_HANDLER( void )
     {
         //SW2 button pressed.
         gpio0ClearInterruptMask |= SW2_ACTIVE;
-        btn1Count += 2;
         
-        if ( btn1Count > BTN1_MAX_TASK_ID )
+        //Activate tasks 1, 3, 5 and 7.
+        for ( uint8_t i = 1; i <= BTN1_MAX_TASK_ID; i += 2 )
         {
-            btn1Count = 1;
+            Scheduler_Priority_ActivateTask( &Scheduler, i );
         }
-
-        Scheduler_Priority_ActivateTask( &Scheduler, btn1Count );
     }
 
     if ( gpio0InterruptRegister & SW3_ACTIVE )
     {
         //SW3 button pressed.
         gpio0ClearInterruptMask |= SW3_ACTIVE;
-        btn2Count += 2;
 
-        if ( btn2Count > BTN2_MAX_TASK_ID )
+        //Activate tasks 2, 4, 6 and 8.
+        for ( uint8_t i = 2; i <= BTN2_MAX_TASK_ID; i += 2 )
         {
-            btn2Count = 2;
+            Scheduler_Priority_ActivateTask( &Scheduler, i );
         }
-
-        Scheduler_Priority_ActivateTask( &Scheduler, btn1Count );
     }
 
     GPIO_GpioClearInterruptFlags( GPIO0, gpio0ClearInterruptMask );
